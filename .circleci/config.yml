@@ -8,16 +8,16 @@ jobs:
       - checkout
 
   build-docker:
-    machine:
-      image: circleci/classic:latest  # Machine executor with Docker pre-installed
+    docker:
     steps:
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run:
           name: Install Node.js and build Docker containers
           command: |
-            # Install Node.js (optional, since machine image already includes Docker)
-            sudo apt-get update
-            sudo apt-get install -y nodejs npm
+            # Install Node.js
+            apk add --no-cache nodejs npm
 
             docker build -t udagram-reverseproxy ./udagram-reverseproxy
             docker tag udagram-reverseproxy binhlh/udagram-reverseproxy:v1
